@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-pip install -r requirements
+pip install -r requirements.txt
 playwright install
 
 # Store/pull Playwright cache with build cache
