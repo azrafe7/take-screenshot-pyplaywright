@@ -13,7 +13,7 @@ echo cache ms-playwright
 ls /opt/render/.cache/ms-playwright -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 echo
 echo chrome ms-playwright
-ls /opt/render/.cache/ms-playwright/chromium-1140/chrome-linux/chrome
+ls /opt/render/.cache/ms-playwright/chromium-1140/chrome-linux/chrome/*.*
 
 #ls /opt/render/project/playwright
 
