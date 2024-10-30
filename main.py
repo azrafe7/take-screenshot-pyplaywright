@@ -1,4 +1,3 @@
-# main.py
 from fastapi import FastAPI, Form
 from fastapi.responses import StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -37,20 +36,23 @@ async def take_screenshot(
         context_options = {}
         if device == "custom" and custom_width and custom_height:
             context_options["viewport"] = {"width": custom_width, "height": custom_height}
+        elif device == "Desktop":
+            context_options["viewport"] = {"width": 1920, "height": 1080}
         elif device != "custom":
             device_descriptor = p.devices.get(device)
             if device_descriptor:
                 context_options = device_descriptor
-            else:
-                # Default to desktop size if device not found
-                context_options["viewport"] = {"width": 1920, "height": 1080}
         
         context = await browser.new_context(**context_options)
         page = await context.new_page()
         
         try:
             await page.goto(url, wait_until='networkidle', timeout=30000)
-            screenshot_bytes = await page.screenshot(full_page=fullpage, type='png')
+            # Apply screenshot options if device-specific dimensions are set
+            if device != "custom":
+                screenshot_bytes = await page.screenshot(full_page=fullpage, type='png', scale="device")
+            else:
+                screenshot_bytes = await page.screenshot(full_page=fullpage, type='png')
             
             return StreamingResponse(
                 BytesIO(screenshot_bytes),
