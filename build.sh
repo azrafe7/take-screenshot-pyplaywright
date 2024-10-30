@@ -8,6 +8,8 @@ playwright install
 
 ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 
+ls /opt/render/project/playwright
+
 #ls $PLAYWRIGHT_BROWSERS_PATH
 
 # Store/pull Playwright cache with build cache
