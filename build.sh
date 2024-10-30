@@ -6,6 +6,8 @@ export PLAYWRIGHT_BROWSERS_PATH=/opt/render/project/playwright
 pip install -r requirements.txt
 playwright install
 
+ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+
 #ls $PLAYWRIGHT_BROWSERS_PATH
 
 # Store/pull Playwright cache with build cache
