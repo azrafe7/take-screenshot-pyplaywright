@@ -6,9 +6,9 @@ export PLAYWRIGHT_BROWSERS_PATH=/opt/render/project/ms-playwright
 pip install -r requirements.txt
 playwright install
 
-ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+ls /opt/render/project -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 
-ls /opt/render/project/playwright
+#ls /opt/render/project/playwright
 
 #ls $PLAYWRIGHT_BROWSERS_PATH
 
