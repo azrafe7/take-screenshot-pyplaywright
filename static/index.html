@@ -27,6 +27,9 @@
             border-radius: 50%;
             animation: spinner-border .75s linear infinite;
         }
+        #customSize {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -38,10 +41,48 @@
                 <input type="url" class="form-control" id="url" name="url" required 
                        placeholder="https://example.com">
             </div>
+            
+            <div class="mb-3">
+                <label for="device" class="form-label">Device/Viewport:</label>
+                <select class="form-select" id="device" name="device">
+                    <optgroup label="Desktop">
+                        <option value="Desktop">Desktop (1920×1080)</option>
+                    </optgroup>
+                    <optgroup label="Tablets">
+                        <option value="iPad Pro">iPad Pro</option>
+                        <option value="iPad Mini">iPad Mini</option>
+                        <option value="iPad (gen 7)">iPad</option>
+                    </optgroup>
+                    <optgroup label="Phones">
+                        <option value="iPhone 13">iPhone 13</option>
+                        <option value="iPhone 13 Pro Max">iPhone 13 Pro Max</option>
+                        <option value="Pixel 5">Pixel 5</option>
+                        <option value="Samsung Galaxy S8+">Samsung Galaxy S8+</option>
+                    </optgroup>
+                    <optgroup label="Custom">
+                        <option value="custom">Custom Size</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div id="customSize" class="mb-3 row">
+                <div class="col">
+                    <label for="custom_width" class="form-label">Width (px):</label>
+                    <input type="number" class="form-control" id="custom_width" name="custom_width" 
+                           min="1" step="1" value="1920">
+                </div>
+                <div class="col">
+                    <label for="custom_height" class="form-label">Height (px):</label>
+                    <input type="number" class="form-control" id="custom_height" name="custom_height" 
+                           min="1" step="1" value="1080">
+                </div>
+            </div>
+            
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="fullpage" name="fullpage">
                 <label class="form-check-label" for="fullpage">Capture Full Page</label>
             </div>
+            
             <button type="submit" class="btn btn-primary">
                 Take Screenshot
                 <span class="loading" style="display: none;"></span>
@@ -63,6 +104,12 @@
     </div>
 
     <script>
+        // Handle device selection change
+        document.getElementById('device').addEventListener('change', (e) => {
+            const customSize = document.getElementById('customSize');
+            customSize.style.display = e.target.value === 'custom' ? 'flex' : 'none';
+        });
+
         document.getElementById('screenshotForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -75,6 +122,11 @@
             
             // Show loading state
             status.style.display = 'block';
+            status.classList.remove('alert-danger');
+            status.classList.add('alert-info');
+            status.textContent = 'Taking screenshot... ';
+            status.appendChild(spinner.cloneNode(true));
+            
             preview.style.display = 'none';
             downloadBtn.style.display = 'none';
             submitBtn.disabled = true;
@@ -82,6 +134,14 @@
             
             try {
                 const formData = new FormData(form);
+                const device = formData.get('device');
+                
+                // Only include custom dimensions if custom device is selected
+                if (device !== 'custom') {
+                    formData.delete('custom_width');
+                    formData.delete('custom_height');
+                }
+                
                 const response = await fetch('/screenshot', {
                     method: 'POST',
                     body: formData
