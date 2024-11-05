@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: web-screenshot
+    runtime: docker
+    repo: https://github.com/azrafe7/take-screenshot-pyplaywright
+    plan: free
+    autoDeploy: false
